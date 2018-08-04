@@ -5,7 +5,7 @@ WORK IN PROGRESS
 
 Monocular odometry pipeline based on 3d-2d correspondance, with bundle adjustement and loop closure.
 Implemented in C++ with OpenCV, g2o and DLoopDetector
-Hopefully this system will be adapted to work on thermal cameras (mainly the FLIR Vue)
+.Hopefully this system will be adapted to work on thermal cameras (mainly the FLIR Vue)
 
 PRESENT GOAL
 
