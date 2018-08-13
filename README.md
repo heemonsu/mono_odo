@@ -6,6 +6,8 @@ WORK IN PROGRESS
 Monocular odometry pipeline based on 3d-2d correspondance, with bundle adjustement and loop closure.
 Implemented in C++ with OpenCV, g2o and DLoopDetector. Hopefully this system will be adapted to work on thermal cameras (mainly the FLIR Vue)
 
+This version is using stereo images to triangulate 3d points
+
 PRESENT GOAL
 
 1/ Get reasonable odometry results from 3d-2d correspondances
