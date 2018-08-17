@@ -23,7 +23,8 @@ vector<vector<float> > get_Pose() {
 
   vector<vector<float> > poses;
   //Theese need to be modified depending on where the dataset is located
-  ifstream myfile("/media/mahdi/Bulk1/Ubuntu/dataset-kitti-odom/poses/00.txt");
+  //ifstream myfile("/home/himanshu/Documents/thermal_data/poses/00.txt");
+  ifstream myfile("/home/himanshu/Datasets/KITTI_VO/poses/00.txt");
   //ifstream myfile(path);
   string line;
   if (myfile.is_open())
@@ -54,7 +55,7 @@ double getAbsoluteScale(int frame_id, int sequence_id, double z_cal)	{
 
   string line;
   int i = 0;
-  ifstream myfile ("/media/mahdi/Bulk1/Ubuntu/dataset-kitti-odom/poses/00.txt");
+  ifstream myfile ("/home/himanshu/Documents/thermal_data/poses/00.txt");
   double x=0, y=0, z=0;
   double x_prev, y_prev, z_prev;
   if (myfile.is_open())

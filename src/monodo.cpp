@@ -43,9 +43,13 @@ int main( int argc, char** argv )	{
 
 
   //Theese need to be modified depending on where the dataset is located
-  sprintf(filename1, "/media/mahdi/Bulk1/Ubuntu/dataset-kitti-odom/sequences/00/image_0/%06d.png", 1);
-  sprintf(filename2, "/media/mahdi/Bulk1/Ubuntu/dataset-kitti-odom/sequences/00/image_0/%06d.png", 3);
-
+  // Thermal images
+  //sprintf(filename1, "/home/himanshu/Documents/thermal_data/frames_bg/%06d.png", 1);
+  //ifstream myfile("/home/himanshu/Documents/thermal_data/poses/00.txt");
+  //sprintf(filename2, "/home/himanshu/Documents/thermal_data/frames_bg/%06d.png", 3);
+  // KITTI Dataset
+  sprintf(filename1, "/home/himanshu/Datasets/KITTI_VO/sequences/00/image_1/%06d.png", 1);
+  sprintf(filename2, "/home/himanshu/Datasets/KITTI_VO/sequences/00/image_1/%06d.png", 3);
   //read the first two frames from the dataset
   Mat img_1_c = imread(filename1);
   Mat img_2_c = imread(filename2);
@@ -134,7 +138,7 @@ int main( int argc, char** argv )	{
   landmarks = get3D_Points_0(match_points1, match_points2, H);
 
 
-  cout << landmarks << endl;
+  //cout << landmarks << endl;
 
   cout << "--------------------------- INITIALIZATION ---------------------------------------" << endl;
   cout << " " << endl;
@@ -183,13 +187,32 @@ int main( int argc, char** argv )	{
 
   cout << "--------------------------- CONTININOUS ---------------------------------------" << endl;
 
-  for(int numFrame=4; numFrame < 2000; numFrame++)	{ 
+  for(int numFrame=4; numFrame < 2000; numFrame++)	{
+      
+      //////////////////////////////////////- FOR DEBUG PURPOSES -////////////////////////////////////////////
+      
+      projectPoints(landmarks, rvec, t, K, distCoeffs, imagePoints);
+      
+      Mat img_keypoints_3;
+      vector<KeyPoint> keypoints_3;
+      for( size_t i = 0; i < imagePoints.size(); i++ ) {
+          keypoints_3.push_back(KeyPoint(imagePoints[i], 1.f));
+      }
+      
+      drawKeypoints( prevImage, keypoints_3, img_keypoints_3, Scalar::all(-1), DrawMatchesFlags::DEFAULT );
+      
+      //imshow( "1", img_keypoints_3 );
+      
+      //waitKey();
+      
+      /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////- CONTINOUS PART HERE -///////////////////////////////////////////////////////
 
 	cout << "numFrame = " << numFrame << endl;
 
-	sprintf(filename, "/media/mahdi/Bulk1/Ubuntu/dataset-kitti-odom/sequences/00/image_0/%06d.png", numFrame);
+	//sprintf(filename, "/home/himanshu/Documents/thermal_data/frames_bg/%06d.png", numFrame);
+	sprintf(filename, "/home/himanshu/Datasets/KITTI_VO/sequences/00/image_1/%06d.png", numFrame);
   	Mat currImage_c = imread(filename);
   	cvtColor(currImage_c, currImage, COLOR_BGR2GRAY);
   	vector<Point3f> landmarks_ref;
@@ -211,7 +234,7 @@ int main( int argc, char** argv )	{
 	//solvePnP(landmarks_ref, featurePoints_ref, K, dist_coeffs, rv, tv, false, CV_P3P );
 	//solvePnPRansac(landmarks, currFeatures, K, dist_coeffs, rv, tv, false, 100, 4.0, 0.99, inliers);
 
-	//if (inliers.size() < 5) continue;
+	if (inliers.size() < 5) continue;
 
 	
 	float inliers_ratio = inliers.size()/float(landmarks_ref.size());
@@ -231,9 +254,11 @@ int main( int argc, char** argv )	{
 	tv.copyTo(J.col(3));
 
 
-  	R_mat = R_mat.t();
+  	R_mat = R_mat * R_mat.t();
+  	//R_mat = R_mat.t();
 	//R_f = R_f*R_mat;
-	t_vec = -R_mat*tv;
+	t_vec = t_vec - R_mat*tv;
+	//t_vec = -R_mat*tv;
   	//t_vec = -R_f*tv;
 
 
@@ -360,7 +385,7 @@ int main( int argc, char** argv )	{
 		rectangle(traj, Point2f(10, 30), Point2f(550, 50),  Scalar(0,0,0), cv::FILLED);
 		putText(traj, text, Point2f(10,50), cv::FONT_HERSHEY_PLAIN, 1, Scalar(0, 0,255), 1, 5);
 		putText(traj, text2, Point2f(10,70), cv::FONT_HERSHEY_PLAIN, 1, Scalar(255,0,0), 1, 5);
-		imshow( "Trajectory", traj);
+//		imshow( "Trajectory", traj);
 		waitKey(1);
 
 }
